@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>CF | CURIEM FASHION'S — Luxury Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        /* System Default Theme - follows OS preference */
+        :root {
+            --primary-yellow: #FFD700;
+            --soft-yellow: #FFFBEB;
+            --deep-yellow: #EAB308;
+            --white: #FFFFFF;
+            --text-dark: #1A1A1A;
+            --text-light: #666666;
+            --border: #EEEEEE;
+            --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.98);
+            --footer-bg: #111111;
+            --footer-text: #888;
+            --overlay-bg: rgba(255, 255, 255, 0.25);
+            --btn-bg: #1A1A1A;
+            --btn-text: white;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        /* Dark theme - automatically applied when system preference is dark */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-yellow: #FFD966;
+                --soft-yellow: #2a2a1c;
+                --deep-yellow: #FBBF24;
+                --white: #0f0f12;
+                --text-dark: #F5F5F7;
+                --text-light: #A1A1AA;
+                --border: #2a2a2f;
+                --card-bg: #18181b;
+                --header-bg: rgba(18, 18, 24, 0.98);
+                --footer-bg: #050505;
+                --footer-text: #9ca3af;
+                --overlay-bg: rgba(0, 0, 0, 0.45);
+                --btn-bg: #F5F5F7;
+                --btn-text: #18181b;
+                --shadow: rgba(0, 0, 0, 0.4);
+            }
+            body { background-color: var(--white) !important; background-image: radial-gradient(var(--soft-yellow) 1.5px, transparent 1.5px); }
+            .product-card { background: var(--card-bg); }
+            .carousel-content h1 { background: rgba(15, 15, 18, 0.85); backdrop-filter: blur(4px); color: white; }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--white);
+            background-image: radial-gradient(var(--soft-yellow) 2px, transparent 2px);
+            background-size: 30px 30px;
+            color: var(--text-dark);
+        }
+
+        header {
+            background: var(--header-bg);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 4px solid var(--primary-yellow);
+            backdrop-filter: blur(12px);
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--text-dark);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .logo span { color: var(--deep-yellow); }
+        nav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        nav a:hover { color: var(--deep-yellow); }
+        
+        .cart-icon {
+            position: relative;
+            margin-left: 15px;
+            cursor: pointer;
+            font-size: 22px;
+            color: var(--text-dark);
+        }
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -12px;
+            background: var(--deep-yellow);
+            color: #1a1a1a;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        .carousel-wrapper { position: relative; height: 500px; overflow: hidden; background: var(--soft-yellow); }
+        .carousel-container { position: relative; width: 100%; height: 100%; }
+        .carousel-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 1s ease;
+        }
+        .carousel-slide.active { opacity: 1; z-index: 2; }
+        .carousel-content {
+            height: 100%; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; background: var(--overlay-bg); text-align: center;
+        }
+        .carousel-content h1 {
+            font-family: 'Playfair Display', serif; font-size: 4rem;
+            background: rgba(255,255,240,0.9); padding: 10px 40px;
+            border: 2px solid var(--primary-yellow); color: #111;
+        }
+        .carousel-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0,0,0,0.5); color: white; border: none;
+            font-size: 2rem; padding: 8px 18px; cursor: pointer; z-index: 20;
+            border-radius: 60px;
+        }
+        .btn-prev { left: 20px; }
+        .btn-next { right: 20px; }
+        .carousel-indicators {
+            position: absolute; bottom: 20px; left: 0; right: 0;
+            display: flex; justify-content: center; gap: 12px; z-index: 20;
+        }
+        .indicator {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: rgba(255,255,240,0.6); cursor: pointer;
+        }
+        .indicator.active { background: var(--primary-yellow); width: 28px; border-radius: 12px; }
+
+        .container { max-width: 1400px; margin: 60px auto; padding: 0 25px; }
+        .section-title {
+            font-family: 'Playfair Display', serif; font-size: 2.5rem;
+            text-align: center; margin-bottom: 40px;
+        }
+        .section-title:after {
+            content: ''; display: block; width: 80px; height: 3px;
+            background: var(--primary-yellow); margin: 12px auto 0;
+        }
+        .product-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .product-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; transition: 0.3s;
+            position: relative;
+        }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px var(--shadow); }
+        .img-box { height: 340px; width: 100%; overflow: hidden; position: relative; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .product-card:hover .img-box img { transform: scale(1.08); }
+        .badge {
+            position: absolute; top: 15px; left: 15px;
+            background: var(--primary-yellow); padding: 4px 12px;
+            font-size: 11px; font-weight: 800; border-radius: 30px;
+            z-index: 5;
+        }
+        .add-to-cart-btn {
+            width: 100%; background: var(--btn-bg); color: var(--btn-text);
+            border: none; padding: 14px; font-weight: 600;
+            cursor: pointer; font-size: 14px; transition: 0.3s;
+        }
+        .add-to-cart-btn:hover { background: var(--deep-yellow); color: #111; }
+        .details { padding: 18px; text-align: center; }
+        .details h3 { font-size: 16px; margin-bottom: 6px; }
+        .price { color: var(--deep-yellow); font-weight: 800; font-size: 18px; }
+
+        .cart-sidebar {
+            position: fixed; top: 0; right: -450px; width: 420px; height: 100%;
+            background: var(--card-bg); box-shadow: -5px 0 30px rgba(0,0,0,0.3);
+            z-index: 2000; transition: right 0.35s ease; display: flex; flex-direction: column;
+            border-left: 2px solid var(--primary-yellow);
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px; border-bottom: 1px solid var(--border);
+            background: var(--primary-yellow); color: #111;
+        }
+        .close-cart { background: none; border: none; font-size: 28px; cursor: pointer; }
+        .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .cart-item-img { width: 70px; height: 90px; object-fit: cover; border-radius: 8px; }
+        .cart-item-details { flex: 1; }
+        .item-quantity { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+        .qty-btn { background: var(--border); border: none; width: 26px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .remove-item { background: none; border: none; color: #e63946; cursor: pointer; font-size: 12px; margin-left: 10px; }
+        .cart-total { padding: 20px; border-top: 2px solid var(--border); font-weight: 800; font-size: 20px; }
+        .checkout-btn { background: var(--deep-yellow); width: 90%; margin: 15px auto; padding: 14px; border: none; font-weight: bold; border-radius: 40px; cursor: pointer; }
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1500; display: none;
+        }
+        .overlay.active { display: block; }
+        footer { background: var(--footer-bg); padding: 50px 5% 30px; text-align: center; margin-top: 60px; }
+        .toast-msg {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--deep-yellow); color: #111; padding: 12px 24px;
+            border-radius: 50px; font-weight: 600; z-index: 2100;
+            animation: fadeOut 2s forwards;
+        }
+        @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+        @media (max-width: 550px) { .cart-sidebar { width: 100%; right: -100%; } .carousel-content h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo" id="homeLogo">CUR<span>IEM</span></div>
+    <nav>
+        <a id="navHome">Home</a>
+        <a id="navShop">Shop All</a>
+        <a id="navUserPage">My Account</a>
+        <div class="cart-icon" id="cartIcon">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </nav>
+</header>
+
+<div class="carousel-wrapper">
+    <div class="carousel-container" id="carouselContainer">
+        <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop');">
+            <div class="carousel-content"><h1>SUMMER LUXE</h1><p>Premium Fabrics. Timeless Designs.</p></div>
+        </div>
+        <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=2070&auto=format&fit=crop');">
+            <div class="carousel-content"><h1>MODERN CLASSICS</h1><p>New Season. New You.</p></div>
+        </div>
+        <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop');">
+            <div class="carousel-content"><h1>GOLDEN HOUR</h1><p>Effortless Elegance.</p></div>
+        </div>
+    </div>
+    <button class="carousel-btn btn-prev" id="prevSlideBtn">‹</button>
+    <button class="carousel-btn btn-next" id="nextSlideBtn">›</button>
+    <div class="carousel-indicators" id="indicatorsContainer"></div>
+</div>
+
+<div class="container" id="shopSection">
+    <h2 class="section-title">Premium Collection</h2>
+    <div class="product-grid" id="productGrid"></div>
+</div>
+
+<footer>
+    <div class="logo" style="color:var(--primary-yellow)">CUR<span>IEM</span></div>
+    <p style="margin: 15px 0;">Defining Modern Elegance.</p>
+    <p>THIS SITE IS DEMO.</p>
+    <p>2026 CURIEM FASHION'S | All Rights Reserved.</p>
+</footer>
+
+<div class="overlay" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+        <button class="close-cart" id="closeCartBtn">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItemsList"><p style="text-align:center; padding:30px;">Your cart is empty.</p></div>
+    <div class="cart-total" id="cartTotal">Total: ₹0</div>
+    <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+</div>
+
+<script>
+    // ---------- 12 PRODUCTS WITH ALL WORKING IMAGE URLs ----------
+    const products = [
+        { id: 1, name: "Golden Sunset Co-ord Set", price: 1299, img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop", badge: "TRENDING" },
+        { id: 2, name: "Urban Oversized Shirt", price: 849, img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1887&auto=format&fit=crop", badge: null },
+        { id: 3, name: "Linen Evening Wrap", price: 1550, img: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=1887&auto=format&fit=crop", badge: "NEW" },
+        { id: 4, name: "Floral Bohemian Dress", price: 2100, img: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=1920&auto=format&fit=crop", badge: null },
+        { id: 5, name: "Minimalist Tee - White", price: 499, img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1887&auto=format&fit=crop", badge: null },
+        { id: 6, name: "Denim Utility Jacket", price: 1899, img: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=2070&auto=format&fit=crop", badge: "SALE" },
+        { id: 7, name: "Silk Satin Blouse", price: 2499, img: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=1887&auto=format&fit=crop", badge: "LIMITED" },
+        { id: 8, name: "Pleated Midi Skirt", price: 1799, img: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1952&auto=format&fit=crop", badge: null },
+        { id: 9, name: "Oversized Blazer - Beige", price: 3499, img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1936&auto=format&fit=crop", badge: "BESTSELLER" },
+        { id: 10, name: "Cropped Wool Sweater", price: 1999, img: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1964&auto=format&fit=crop", badge: null },
+        { id: 11, name: "Leather Tote Bag", price: 3999, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1935&auto=format&fit=crop", badge: "NEW" },
+        { id: 12, name: "Chunky Sneakers", price: 4599, img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1912&auto=format&fit=crop", badge: "HOT" }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('cf_cart')) || [];
+
+    function saveCart() { localStorage.setItem('cf_cart', JSON.stringify(cart)); updateCartUI(); updateCartCount(); }
+
+    function updateCartCount() { const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); document.getElementById('cartCount').innerText = totalItems; }
+
+    function updateCartUI() {
+        const cartContainer = document.getElementById('cartItemsList');
+        const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        document.getElementById('cartTotal').innerHTML = `Total: ₹${totalPrice.toLocaleString()}`;
+        if (cart.length === 0) { cartContainer.innerHTML = '<p style="text-align:center; padding:30px;">Your cart is empty.</p>'; return; }
+        cartContainer.innerHTML = cart.map(item => `
+            <div class="cart-item" data-id="${item.id}">
+                <img class="cart-item-img" src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1445205170230-053b830c6050?q=80&w=2071&auto=format&fit=crop'">
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${item.name}</div>
+                    <div class="cart-item-price">₹${item.price}</div>
+                    <div class="item-quantity">
+                        <button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" data-id="${item.id}" data-delta="1">+</button>
+                        <button class="remove-item" data-id="${item.id}">Remove</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.stopPropagation(); const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); });
+        });
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.stopPropagation(); const id = parseInt(btn.dataset.id); removeFromCart(id); });
+        });
+    }
+
+    function updateQuantity(id, delta) {
+        const idx = cart.findIndex(i => i.id === id);
+        if (idx !== -1) {
+            const newQty = cart[idx].quantity + delta;
+            if (newQty <= 0) cart.splice(idx, 1);
+            else cart[idx].quantity = newQty;
+            saveCart();
+            showToast(delta > 0 ? "Quantity updated" : "Item removed");
+        }
+    }
+    function removeFromCart(id) { cart = cart.filter(i => i.id !== id); saveCart(); showToast("Item removed"); }
+
+    function addToCart(product) {
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) { existing.quantity += 1; }
+        else { cart.push({ ...product, quantity: 1 }); }
+        saveCart();
+        showToast(`${product.name} added to cart!`);
+        openCartSidebar();
+    }
+
+    function showToast(msg) {
+        let toast = document.createElement('div'); toast.className = 'toast-msg'; toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    function openCartSidebar() { document.getElementById('cartSidebar').classList.add('open'); document.getElementById('cartOverlay').classList.add('active'); }
+    function closeCartSidebar() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('active'); }
+    document.getElementById('cartIcon').addEventListener('click', openCartSidebar);
+    document.getElementById('closeCartBtn').addEventListener('click', closeCartSidebar);
+    document.getElementById('cartOverlay').addEventListener('click', closeCartSidebar);
+
+    function renderProducts() {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = products.map(p => `
+            <div class="product-card">
+                ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+                <div class="img-box">
+                    <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1445205170230-053b830c6050?q=80&w=2071&auto=format&fit=crop'">
+                    <button class="add-to-cart-btn" data-id="${p.id}">ADD TO CART</button>
+                </div>
+                <div class="details">
+                    <h3>${p.name}</h3>
+                    <div class="price">₹${p.price.toLocaleString()}</div>
+                </div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => { const id = parseInt(btn.dataset.id); const product = products.find(p => p.id === id); if (product) addToCart(product); });
+        });
+    }
+    renderProducts();
+    updateCartCount();
+    updateCartUI();
+
+    // Carousel
+    let currentIndex = 0; let autoInterval;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicatorsDiv = document.getElementById('indicatorsContainer');
+    function createIndicators() { slides.forEach((_, idx) => { const dot = document.createElement('button'); dot.classList.add('indicator'); dot.addEventListener('click', () => goToSlide(idx)); indicatorsDiv.appendChild(dot); }); updateIndicators(); }
+    function updateIndicators() { const dots = document.querySelectorAll('.indicator'); dots.forEach((dot, idx) => { if (idx === currentIndex) dot.classList.add('active'); else dot.classList.remove('active'); }); }
+    function goToSlide(index) { slides.forEach(s => s.classList.remove('active')); currentIndex = (index + slides.length) % slides.length; slides[currentIndex].classList.add('active'); updateIndicators(); resetAutoPlay(); }
+    function nextSlide() { goToSlide(currentIndex + 1); }
+    function prevSlide() { goToSlide(currentIndex - 1); }
+    function resetAutoPlay() { if (autoInterval) clearInterval(autoInterval); autoInterval = setInterval(nextSlide, 5000); }
+    document.getElementById('prevSlideBtn').addEventListener('click', prevSlide);
+    document.getElementById('nextSlideBtn').addEventListener('click', nextSlide);
+    slides[0].classList.add('active'); createIndicators(); resetAutoPlay();
+
+    // Navigation - Direct link to user.html (same tab)
+    document.getElementById('navUserPage')?.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        window.location.href = 'user.html'; 
+    });
+    
+    document.getElementById('checkoutBtn')?.addEventListener('click', () => { 
+        closeCartSidebar(); 
+        const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+        if (cart.length === 0) {
+            showToast("Your cart is empty");
+            return;
+        }
+        alert(`Proceed to checkout. Total: ₹${total.toLocaleString()}\nThank you for shopping at CURIEM!`);
+        cart = [];
+        saveCart();
+        window.location.reload();
+    });
+    
+    document.getElementById('navHome')?.addEventListener('click', () => { 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    document.getElementById('navShop')?.addEventListener('click', () => { 
+        document.getElementById('shopSection').scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    document.getElementById('homeLogo')?.addEventListener('click', () => { 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Sync cart across tabs
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'cf_cart') {
+            cart = JSON.parse(e.newValue) || [];
+            updateCartCount();
+            updateCartUI();
+        }
+    });
+    
+    updateCartCount();
+</script>
+</body>
+</html>
